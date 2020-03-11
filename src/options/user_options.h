@@ -31,8 +31,10 @@ struct user_options
     
     char *input_filename_U;
     char *input_filename_V;
+    char *method_name;
 
 	char *update_chemical_function_name;
+	bool using_interpolation;
 	
 	uint32_t print_rate;
 	char *output_dir;
@@ -44,6 +46,8 @@ struct user_options
 	
 	char *linear_system_function_name;
 	
+	double length_cell_dx;
+	double length_cell_dy;
 	double start_dx;
 	double start_dy;
 	double start_dz;

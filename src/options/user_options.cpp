@@ -87,6 +87,22 @@ int parse_config_file(void *user, const char *section, const char *name, const c
         {
             pconfig->input_filename_V = strdup(value);
         }
+        else if (MATCH_NAME("interpolation"))
+        {
+			if(strcmp(value,"yes")== 0 || strcmp(value,"true")== 0)
+				pconfig->using_interpolation = true;
+            else if(strcmp(value,"no")== 0 || strcmp(value,"false")== 0)
+            {
+				pconfig->using_interpolation = false;
+			}
+			else
+			{
+				fprintf(stderr,"[-] ERROR! Invalid Interpolation option '%s'\n",value);
+				exit(EXIT_FAILURE);
+			}
+        }
+        
+        
     }
     else if (SECTION_STARTS_WITH(UPDATE_CHEMICAL_SECTION))
     {
@@ -126,6 +142,19 @@ int parse_config_file(void *user, const char *section, const char *name, const c
         {
             pconfig->assembly_matrix_function_name = strdup(value);
         }
+        
+		else if (MATCH_NAME("method"))
+        {
+			if(strcmp(value,"DM")== 0 || strcmp(value,"DDM")== 0 || strcmp(value,"QCM")== 0 || strcmp(value,"CM")== 0 )
+				pconfig->method_name = strdup(value);
+            else
+            {
+				fprintf(stderr,"[-] ERROR! Invalid method name '%s'\n",value);
+				exit(EXIT_FAILURE);
+			}
+        }
+        
+        
     }
     else if (SECTION_STARTS_WITH(LINEAR_SYSTEM_SECTION))
     {
@@ -157,6 +186,16 @@ int parse_config_file(void *user, const char *section, const char *name, const c
         {
             pconfig->domain_function_name = strdup(value);
         }
+        
+        else if (MATCH_NAME("length_cell_dx"))
+        {
+            pconfig->length_cell_dx = strtof(value, NULL);
+        }
+        
+        else if (MATCH_NAME("length_cell_dy"))
+        {
+            pconfig->length_cell_dy = strtof(value, NULL);
+        }        
     }
     else if (SECTION_STARTS_WITH(ODE_SOLVER_SECTION))
     {
@@ -196,9 +235,12 @@ void print_user_options (struct user_options *options)
     printf("sigma_y = %g\n",options->sigma_y);
     printf("sigma_z = %g\n",options->sigma_z);
     printf("assembly_matrix_function_name = %s\n",options->assembly_matrix_function_name);
+    printf("method = %s\n",options->method_name);
     printf("--------------------------------------------------------\n");
     printf("linear_system_function_name = %s\n",options->linear_system_function_name);
     printf("--------------------------------------------------------\n");
+    printf("length_cell_dx = %g\n",options->length_cell_dx);
+    printf("length_cell_dy = %g\n",options->length_cell_dy);
     printf("start_dx = %g\n",options->start_dx);
     printf("start_dy = %g\n",options->start_dy);
     printf("start_dz = %g\n",options->start_dz);

@@ -23,14 +23,26 @@ void configure_solver_from_options (struct solver_droplets *the_solver,\
 	double dy_pde = the_options->start_dy;
 	double sigma_x = the_options->sigma_x;
 	double sigma_y = the_options->sigma_y;
+	
+	
+	double length_cell_dx = the_options->length_cell_dx;
+	double length_cell_dy = the_options->length_cell_dy;
+	
+	char *method_name = the_options->method_name;
+	bool using_interpolation = the_options->using_interpolation;
+	
 	uint32_t nx = nearbyint(the_options->side_length / the_options->start_dx);
 	uint32_t ny = nearbyint(the_options->side_length / the_options->start_dy);
 	uint32_t nt = nearbyint(the_options->simulation_time / the_options->dt_pde);
-	configure_pde_solver(the_solver->the_pde_solver,sigma_x,sigma_y,dt_pde,dx_pde,dy_pde,nx,ny,nt);
+	
+	configure_pde_solver(the_solver->the_pde_solver,sigma_x,sigma_y,dt_pde,dx_pde,dy_pde,length_cell_dx,length_cell_dy,nx,ny,nt,method_name);
 	
 	// Configure global solver
 	the_solver->print_rate = the_options->print_rate;
 	the_solver->spiral_time = the_options->spiral_time;
+	
+	the_solver->using_interpolation = using_interpolation;
+	
 	if (the_options->output_dir != NULL)
 	{
 		uint32_t size = strlen(the_options->output_dir);

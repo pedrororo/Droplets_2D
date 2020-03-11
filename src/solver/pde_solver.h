@@ -20,6 +20,10 @@ struct solver_pde
 	
 	double sigma_x; //conductivity x
 	double sigma_y; //conductivity y
+	double kappa_x;	//ddm kappa_x
+	double kappa_y; //ddm kappa_y
+	
+	char *method_name; 
 	
 	uint32_t    nx;		// Number of cells in grid x
 	uint32_t    ny;		// Number of cells in grid y
@@ -60,17 +64,22 @@ struct solver_pde
 struct solver_pde* new_solver_pde();
 
 void configure_pde_solver(struct solver_pde *s, const double sigma_x, const double sigma_y,\
-						const double dt_pde, const double dx_pde, const double dy_pde,const uint32_t nx, const uint32_t ny, const uint32_t nt);
+						const double dt_pde, const double dx_pde, const double dy_pde,const double length_cell_dx, const double length_cell_dy,const uint32_t nx, const uint32_t ny, const uint32_t nt, const char method_name[]);
 
 void allocate_pde_vectors (struct solver_pde *s);
 
+double calculate_kappa(double L_h, double h);
+
+double calculate_kappa_QCM(double L_h, double h);
+
+
 void calculate_parabolic_LHS (struct solver_pde *s);
 
-void set_parabolic_matrix (double *a, double *b, double *c, const double sigma, const double dt, const double h,const uint32_t n);
+void set_parabolic_matrix (double *a, double *b, double *c, const double sigma, const double dt, const double h,const double kappa, const uint32_t n);
 
 void solve_pde (struct solver_pde *the_pde_solver, double **U, double **V);
 
-void solve_parabolic (const double *a, const double *b, const double *c, double *rhs, double **A, const uint32_t nx, const uint32_t ny, const char axis);
+void solve_parabolic (const double *a, const double *b, const double *c, double *rhs, double **A, const uint32_t nx, const uint32_t ny, const char axis, const double kappa);
 
 void solve_tridiagonal_system (const double *a, const double *b, const double *c, double *rhs, double *x, const uint32_t n);
 
